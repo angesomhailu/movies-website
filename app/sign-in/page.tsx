@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Card, CardContent, CardHeader,CardDescription,CardTitle} from '@/components/ui/card';
@@ -8,7 +9,22 @@ import {FaGithub} from 'react-icons/fa';
 import Link from 'next/link';
 export default function SignIn(){
   return (
-    <div className='h-full flex items-center justify-center bg-black-500'>
+    <>
+    <nav className='flex-between w-full mt-7 ml-10'>
+     <Link href="/" className='flex gap-2 flex-center '>
+     <Image
+      src="/assets/images/logo.svg" alt="angestrom" className='object-contain' width={40} height={40}
+     />
+     <p className='logo_text'>Haha</p>
+     </Link>
+     <div className='flex gap-3 md:gap-5 ml-230 '>
+              <Link href="/sign-in" className='black_btn'>SignIn</Link>
+              <Link href="/sign-up" className='black_btn'>SignUp</Link>
+              
+              
+            </div>
+     </nav>
+    <div className='h-full flex items-center justify-center bg-black-500 '>
         <Card className="md:h-auto w-[80%] sm:w-[420px] p-4 sm:p-8">
             <CardHeader>
             <CardTitle className='text-center text-2xl'>
@@ -60,5 +76,6 @@ export default function SignIn(){
             </CardContent>
         </Card>    
     </div>
+    </>
   )
 }
