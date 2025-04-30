@@ -1,32 +1,20 @@
-import mongoose from 'mongoose';
-const mongodbUri=process.env.MONGODB_URI as string;
-const mongodbName=process.env.MONGODB_NAME as string;
-if(!mongodbUri){
-    throw new Error("Please define the MONGODB_URI environment variable ");
+import mongoose from 'mongoose'
+
+const MONGODB= process.env.MONGODB_URI;
+
+if (!MONGODB) {
+    throw new Error (" please define mongo environment variable")
 }
-if(!mongodbName){
-    throw new Error("Please define the MONGODB_NAME environment variable ");
-}
-export default async function connectDB(){
-   try{
-    mongoose.connect(mongodbUri,{dbName:mongodbName});
-    console.log("MongoDB connected successfully");
-   } 
-    catch(err){
-     console.log("MongoDB connection failed",err);
+
+async function connectDB() {
+    if (mongoose.connection.readyState === 1) {
+        return mongoose;
     }
+    const opts = {
+        bufferCommands: false,
+    }
+    await mongoose.connect(MONGODB!, opts);
+    return mongoose;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default connectDB;

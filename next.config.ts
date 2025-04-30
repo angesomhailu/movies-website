@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  experimental: {
-  },
+  // experimental: {
+  // },
 };
 
 export default nextConfig;

@@ -1,21 +1,29 @@
-import {Schema,models,model} from 'mongoose';
-import Email from 'next-auth/providers/email';
-import { unique } from 'next/dist/build/utils';
-const userSchema = new Schema({
-    name:{
-        type:String,
-        required:true,
-    },
-    email: {
-    type: String, // Use String for email
+
+import mongoose, { Document, Model, Schema,models } from "mongoose";
+
+interface IUser extends Document {
+  name: string;
+  email: string;
+  password?: string;
+  id: string;
+}
+
+const UserSchema: Schema<IUser> = new mongoose.Schema({
+  name: {
+    type: String,
     required: true,
-    unique: true, // Ensure email is unique
-    match: [/.+@.+\..+/, 'Please enter a valid email address'], // Add email validation
   },
-    password:{
-        type:String,
-        required:true,
-    },
- 
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: false,
+  },
 });
-export const User = models.User || model('User',userSchema);
+
+export  const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+
