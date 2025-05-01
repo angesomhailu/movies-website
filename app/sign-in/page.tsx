@@ -39,6 +39,13 @@ export default function SignIn(){
       }
 
     }
+    const handleProvider = (
+        event: React.MouseEvent<HTMLButtonElement>,
+        value: "github" | "google"
+      ) => {
+        event.preventDefault();
+        signIn(value, { callbackUrl: "/" });
+      };
   return (
     <>
     
@@ -89,10 +96,10 @@ export default function SignIn(){
                  </form>
                  <Separator/>
                  <div className='flex my-2 justify-evenly mx-auto items-center'>
-                    <Button disabled={false} variant='outline' onClick={()=>{}} size="lg" className='bg-slate-300 hover:bg-slate-400 hover:scale-110'>
+                    <Button disabled={false} variant='outline' onClick={(e)=>handleProvider(e,"google")} size="lg" className='bg-slate-300 hover:bg-slate-400 hover:scale-110'>
                      <FcGoogle className='size-8 left-2.5 top-2.5'/>
                     </Button>
-                    <Button disabled={false} variant='outline' onClick={()=>{}} size="lg" className='bg-slate-300 hover:bg-slate-400 hover:scale-110'>
+                    <Button disabled={false} variant='outline' onClick={(e)=>handleProvider(e,"github")} size="lg" className='bg-slate-300 hover:bg-slate-400 hover:scale-110'>
                      <FaGithub className='size-8 left-2.5 top-2.5'/>
                     </Button>
                  </div>
