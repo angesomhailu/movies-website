@@ -1,36 +1,49 @@
-import { NextResponse } from "next/server";
-import {User}  from "@/models/user";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
+import { NextResponse } from 'next/server'
+import{ User} from '@/models/user'
 import connectDB from '@/lib/mongodb';
 
-export async function POST (request: Request) {
-    const { name,email,password,confirmPasword } = await request.json()
-            if(!name || !email || !password || !confirmPasword){
-                return NextResponse.json({ status : 400, message : "Name ,email or password not set"})
-            } 
-            if(password !== confirmPasword){
-                return NextResponse.json({ status : 400, message : "Password not match"})
-            }
-            if(password.length < 6){
-                return NextResponse.json({ status : 400, message : "Password should be at least 6 characters"})
-            }
-    try {
-        await connectDB();
-        const checkUser = await User.findOne({ email : email })
-        if(checkUser){
-            return NextResponse.json({ status : 400, message : "User already exists"})
-        }
-        const hashedPassword = await bcrypt.hash(password, 10)
 
-        const addUser = new User({
-            name : name,
-            email : email,
-            password : hashedPassword
-        })
-        await addUser.save()
-        return NextResponse.json({ status : 200, message : "User added"})
-    }catch(err){
-        console.log(err); 
-        return NextResponse.json({ status : 400, message : "Something went wrong"})
+export async function POST(request: Request) {
+    try {
+    const { name, email, password, confirmPassword } = await request.json();
+
+     if (!name || !email || !password || !confirmPassword) {
+        return NextResponse.json({message: " All fields are required"},{ status: 400 })
+    }
+    const isValidEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    if (!isValidEmail(email)) {
+        return NextResponse.json({ message: "Invalid email format" },{ status: 400 });
+    }
+    if (confirmPassword !== password) {
+        return NextResponse.json({message:"Password do not match"},{ status: 400 })
+    }
+    if (password.length < 6) {
+        return NextResponse.json({message: "Password must be at least 6 character long" },{ status: 400 });
+    }
+
+    
+        await connectDB();
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return NextResponse.json({ message: "User already exist" },{ status: 400 });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = new User({
+            email,
+            name,
+            password: hashedPassword,
+        });
+        await newUser.save();
+        return NextResponse.json({ message: "User created" }, { status: 201 });
+
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
     }
 }

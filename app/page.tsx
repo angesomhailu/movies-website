@@ -11,9 +11,7 @@ export default function Home() {
      </Link>
      <div className='flex gap-3 md:gap-5'>
               <Link href="/sign-in" className='black_btn'>SignIn</Link>
-              <Link href="/sign-up" className='black_btn'>SignUp</Link>
-              
-              
+              <Link href="/sign-up" className='black_btn'>SignUp</Link> 
             </div>
      </nav>
       <section className="w-full flex-center flex-col">

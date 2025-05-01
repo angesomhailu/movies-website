@@ -1,5 +1,4 @@
 "use client";
-import Image from 'next/image';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Card, CardContent, CardHeader,CardDescription,CardTitle} from '@/components/ui/card';
@@ -7,24 +6,43 @@ import {Separator} from '@/components/ui/separator';
 import {FcGoogle} from 'react-icons/fc';
 import {FaGithub} from 'react-icons/fa';
 import Link from 'next/link';
+import { useState } from 'react';
+import {useRouter} from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { toast } from 'sonner';
+import { TriangleAlert } from 'lucide-react';
 export default function SignIn(){
+    const [email,setEmail] = useState<string>("");  
+    const [password,setPassword] = useState<string>("");
+    const [pending, setPending] = useState(false);
+    const [error, setError] = useState("");
+    const router = useRouter();
+    const handlerSubmit=  async (e:React.FormEvent)=>{
+      e.preventDefault();
+      setPending(true);
+      const res = await signIn(`credentials`,{
+        redirect:false,
+        email,
+        password,
+  
+      });
+      if(res?.ok){
+         router.push("/");
+        toast.success("login successfully");
+      }
+      else if(res?.status === 401){
+        setError("Invalid credentials");
+        setPending(false);
+      }
+      else{
+        setError("something is wrong");
+      }
+
+    }
   return (
     <>
-    <nav className='flex-between w-full mt-7 ml-10'>
-     <Link href="/" className='flex gap-2 flex-center '>
-     <Image
-      src="/assets/images/logo.svg" alt="angestrom" className='object-contain' width={40} height={40}
-     />
-     <p className='logo_text'>Haha</p>
-     </Link>
-     <div className='flex gap-3 md:gap-5 ml-230 '>
-              <Link href="/sign-in" className='black_btn'>SignIn</Link>
-              <Link href="/sign-up" className='black_btn'>SignUp</Link>
-              
-              
-            </div>
-     </nav>
-    <div className='h-full flex items-center justify-center bg-black-500 '>
+    
+    <div className='h-full flex items-center justify-center bg-black-500 mt-10'>
         <Card className="md:h-auto w-[80%] sm:w-[420px] p-4 sm:p-8">
             <CardHeader>
             <CardTitle className='text-center text-2xl'>
@@ -34,31 +52,39 @@ export default function SignIn(){
                 <h1 className='orange_gradient text-2xl'>use email or services, to Sign in to your account</h1>
             </CardDescription>
             </CardHeader>
-            
+            {
+              !!error && (
+                <div className="bg-red-800 p-3 rounded-md flex items-center gap-x-2 text-sm mb-6">
+                  <TriangleAlert/>
+                  <p>{error}</p>
+                </div>
+              )
+            }
             <CardContent className='px-2 sm:px-6'>
-                 <form action="" className='space-y-3'>
+                 <form onSubmit={handlerSubmit} className='space-y-3'>
                    
                    <Input
                    type='email'
-                   disabled={false}
+                   disabled={pending}
                    placeholder='email'
-                   value={""}
-                   onChange={()=>{}}
+                   value={email}
+                   onChange={(e)=>setEmail(e.target.value)}
                    required
                    />
                    <Input
                    type='password'
-                   disabled={false}
+                   disabled={pending}
                    placeholder='password'
-                   value={""}
-                   onChange={()=>{}}
+                   value={password}
+                   onChange={(e)=>setPassword(e.target.value)}
                    required
                    />
                    
                    <Button
+                   type='submit'
                    className='w-full black_btn'
                    size='lg'
-                   disabled={false}
+                   disabled={pending}
                    >Continue</Button>
                  </form>
                  <Separator/>

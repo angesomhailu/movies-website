@@ -1,20 +1,26 @@
 import mongoose from 'mongoose'
 
-const MONGODB= process.env.MONGODB_URI;
-
-if (!MONGODB) {
+const mongodbUri= process.env.MONGODB_URI;
+const mongodbName= process.env.MONGODB_NAME;
+if (!mongodbUri) {
     throw new Error (" please define mongo environment variable")
 }
+if (!mongodbName) {
+    throw new Error (" please define mongo environment variable")
+}
+ const connectDB = async()=>{
+    try{
+        await mongoose.connect(mongodbUri, {
+            dbName: mongodbName,
+            
+        });
 
-async function connectDB() {
-    if (mongoose.connection.readyState === 1) {
-        return mongoose;
+        console.log("MongoDB connected")
+
     }
-    const opts = {
-        bufferCommands: false,
+    catch (error) {
+        console.log("MongoDB connection error", error);
     }
-    await mongoose.connect(MONGODB!, opts);
-    return mongoose;
 }
 
 export default connectDB;

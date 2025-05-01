@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 export const metadata: Metadata = {
   title: "Haha",
@@ -16,7 +17,10 @@ export default function RootLayout({
            <div className='main'>
              <div className='gradient'/>
            </div>     
-          <main>{children}</main>    
+          <main>
+            <Toaster/>
+            {children}
+            </main>    
            </body>
         </html>
   );
