@@ -95,5 +95,7 @@ body {
   @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
 }
 
-
+.logo_text {
+  @apply max-sm:hidden font-semibold text-lg text-blue-500 tracking-wide;
+}
 
